@@ -1,0 +1,4 @@
+1 - separar o fork do original
+2 - buscar o commit mais atual do projeto
+3 - junit
+4 - adicionar na tabela os dados do projeto
