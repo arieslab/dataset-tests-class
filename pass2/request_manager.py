@@ -62,3 +62,23 @@ def request(url, git_username, git_access_token, switch_account):
                 return ret_json, switch_account
         else:
             return ret_json, switch_account
+
+def requestRaw(url):
+    call_counter = 0
+    while True:
+        if call_counter == 15:
+            print("Goodnight! See ya in 1 hour...")
+            time.sleep(3600)
+
+        s = requests.Session()
+
+        try:
+            with closing(requests_retry_session(session=s).get(url, timeout=5)) as temp_raw:
+                ret_raw = str(temp_raw.text)
+        except Exception as e:
+            raise e
+        
+        if ret_raw == "404: Not Found":
+            print("File doesn't exists. url: {}".format(url))
+            return 1
+        return ret_raw
