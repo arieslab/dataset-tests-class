@@ -23,10 +23,9 @@ if __name__ == "__main__":
 
             for count, line in enumerate(data_source):
                 if count != 0 and count == index+1:
-
+    
                     line = line.split(",")
                     repo, switch_account = request_manager.request("{}{}/{}".format(base_url, line[1], line[2]), git_username, git_access_token, switch_account)
-                    
                     if repo != 0:
 
                         repo_id = int(repo["id"])
@@ -66,9 +65,7 @@ if __name__ == "__main__":
                         tree_files_commit, switch_account = request_manager.request(tree_files_commit_url, git_username, git_access_token, switch_account)
 
                         tests_class_count_project = 0
-                        tests_class_junit_3 = 0
-                        tests_class_junit_4 = 0
-                        tests_class_junit_5 = 0
+                        has_junit = False
 
                         for file in tree_files_commit["tree"]:
                             if file["type"] == "blob":
@@ -76,17 +73,21 @@ if __name__ == "__main__":
                                 if file_name.endswith("test.java") or ( file_name.startswith("test") and file_name.endswith(".java") ):
                                     tests_class_count_project += 1
                                     
-                                    test_file_raw_url = "https://raw.githubusercontent.com/{}/{}/{}/{}".format(repo_user, repo_name, repo_last_commit_sha, file["path"])
-                                    test_file = request_manager.requestRaw(test_file_raw_url)
-                                    
-                                    #junit 3 comparator 
-                                    if test_file != 1:
-                                        if "junit.framework" in test_file:
-                                            tests_class_junit_3 +=1
-                                        elif "org.junit.Assert" in test_file:
-                                            tests_class_junit_4 +=1
-                                        elif "org.junit.jupiter" in test_file:
-                                            tests_class_junit_5 +=1
+                                    if(not has_junit):
+                                        test_file_raw_url = "https://raw.githubusercontent.com/{}/{}/{}/{}".format(repo_user, repo_name, repo_last_commit_sha, file["path"])
+                                        test_file = request_manager.requestRaw(test_file_raw_url)
+                                        
+                                        #junit 3 comparator 
+                                        if test_file != 1:
+                                            if "junit.framework" in test_file:
+                                                has_junit = True
+                                                break
+                                            elif "org.junit.Assert" in test_file:
+                                                has_junit = True
+                                                break
+                                            elif "org.junit.jupiter" in test_file:
+                                                has_junit = True
+                                                break
 
                         index += 1
                         data_result.write(str(index) +","+ str(repo_id) +","+ repo_name +","+ repo_full_name +","+" ".join((";".join(str(repo_description).strip().split(","))).split('\n'))+","+
@@ -95,7 +96,7 @@ if __name__ == "__main__":
                                         str(repo_open_issues_count)+","+str(repo_watchers_count)+","+str(repo_has_downloads)+","+str(repo_has_issues)+","+str(repo_has_pages)+","+
                                         str(repo_has_wiki)+","+str(repo_has_projects)+","+repo_git_url+","+repo_git_clone_url+","+repo_last_commit_sha+","+
                                         repo_last_commit_date+","+" ".join((";".join(str(repo_last_commit_message).strip().split(","))).split('\n'))+","+repo_last_commit_author+","+
-                                        str(tests_class_count_project) +","+ str(tests_class_junit_3) +","+ str(tests_class_junit_4) +","+ str(tests_class_junit_5) + '\n')
+                                        str(tests_class_count_project) +","+ str(has_junit) + '\n')
                         
                         print("{}{}/{}".format(base_url, line[1], line[2]))
              
@@ -108,4 +109,4 @@ if __name__ == "__main__":
                                           "created_at,updated_at,pushed_at,size,stargazers,subscribers,is_fork,forks_count,"+
                                           "open_issues,watchers,has_downloads,has_issues,has_pages,has_wiki,has_projects,"+ 
                                           "git_url,clone_url,last_commit_sha,last_commit_date,last_commit_massage,last_commit_author,"+
-                                          "tests_count,junit3_count,junit4_count,junit5_count"+ "\n")
+                                          "tests_count,has_junit"+ "\n")
