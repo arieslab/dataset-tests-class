@@ -8,7 +8,6 @@ import credentials, request_manager
 if __name__ == "__main__":
     # personal Github Account credentials
     git_username, git_access_token = credentials.load("tokens.txt")
-    base_url = "https://api.github.com/repos/"
 
     switch_account = 0
 
@@ -25,7 +24,8 @@ if __name__ == "__main__":
                 if count != 0 and count == index+1:
     
                     line = line.split(",")
-                    repo, switch_account = request_manager.request("{}{}/{}".format(base_url, line[1], line[2]), git_username, git_access_token, switch_account)
+                    base_url = "https://api.github.com/repos/{}/{}".format(line[1], line[2])
+                    repo, switch_account = request_manager.request(base_url, git_username, git_access_token, switch_account)
                     if repo != 0:
 
                         repo_id = int(repo["id"])
@@ -98,11 +98,11 @@ if __name__ == "__main__":
                                         repo_last_commit_date+","+" ".join((";".join(str(repo_last_commit_message).strip().split(","))).split('\n'))+","+repo_last_commit_author+","+
                                         str(tests_class_count_project) +","+ str(has_junit) + '\n')
                         
-                        print("{}{}/{}".format(base_url, line[1], line[2]))
+                        print(base_url)
              
                     else:
                         index += 1
-                        data_result.write(str(index) +",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n")
+                        data_result.write(str(index) +",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n")
 
                 elif index == 0 and count == 0:
                         data_result.write("index,repo_id,app,full_name,description,owner_id,default_branch,language,"+
