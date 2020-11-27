@@ -81,23 +81,22 @@ if __name__ == "__main__":
                                         if test_file != 1:
                                             if "junit.framework" in test_file:
                                                 has_junit = True
-                                                break
                                             elif "org.junit.Assert" in test_file:
                                                 has_junit = True
-                                                break
                                             elif "org.junit.jupiter" in test_file:
                                                 has_junit = True
-                                                break
 
                         index += 1
-                        data_result.write(str(index) +","+ str(repo_id) +","+ repo_name +","+ repo_full_name +","+" ".join(" ".join((";".join(str(repo_description).strip().split(","))).split('\n')).split('\r'))+","+
+                        if has_junit:
+                            data_result.write(str(index) +","+ str(repo_id) +","+ repo_name +","+ repo_full_name +","+" ".join(" ".join((";".join(str(repo_description).strip().split(","))).split('\n')).split('\r'))+","+
                                         str(repo_owner_id) +","+ repo_default_branch +","+ str(repo_language) +","+ repo_created_at +","+ repo_updated_at+","+
                                         repo_pushed_at+","+str(repo_size)+","+str(repo_stargazers)+","+str(repo_subscribers)+","+str(repo_is_fork)+","+str(repo_forks_count)+","+
                                         str(repo_open_issues_count)+","+str(repo_watchers_count)+","+str(repo_has_downloads)+","+str(repo_has_issues)+","+str(repo_has_pages)+","+
                                         str(repo_has_wiki)+","+str(repo_has_projects)+","+repo_git_url+","+repo_git_clone_url+","+repo_last_commit_sha+","+
                                         repo_last_commit_date+","+" ".join(" ".join((";".join(str(repo_last_commit_message).strip().split(","))).split('\n')).split('\r'))+","+repo_last_commit_author+","+
                                         str(tests_class_count_project) +","+ str(has_junit) + '\n')
-                        
+                        else:
+                            data_result.write(str(index) +",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n")
                         print(base_url)
              
                     else:
