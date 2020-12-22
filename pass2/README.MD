@@ -1,0 +1,1 @@
+O Passo 2, tem como objetivo atualizar os valores resultantes do passo 1. E adicionar algumas colunas interessantes, como por exemplo, a quantidade de estrelas, forks, classes de teste, classes de teste com junit, e outras coisas.

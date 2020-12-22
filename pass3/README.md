@@ -1,0 +1,1 @@
+O objetivo do pipe3 é retirar a coluna index e fazer uma substituição de uma aspas especial que o pandas não reconhece por uma outra que o pandas reconhece sem conflitos.

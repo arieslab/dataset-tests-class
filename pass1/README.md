@@ -1,0 +1,1 @@
+Bom o passo 1, tem como objetivo pegar os dados fornecidos pela JTeC e remover os projetos que são forks.
